@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/src/ApacheExec/error.txt
+/src/ApacheExec/output.txt
+/src/ProcessBuilder/error.txt
+/src/ProcessBuilder/output.txt
+
