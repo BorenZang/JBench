@@ -3,11 +3,11 @@ package procesbuilder
 
 import java.io.*
 import java.io.BufferedReader
-
-
+import kotlin.concurrent.thread
 
 
 const val MEGABYTE = 1024L * 1024L
+var exit = false
 fun main(){
     print("Command: ")
     val cmd = readLine()!!
@@ -15,7 +15,11 @@ fun main(){
     // setup runtime
     val runtime = Runtime.getRuntime()
     runtime.gc()
-
+    thread {
+        while(!exit){
+            println(Thread.getAllStackTraces().keys)
+        }
+    }
     // get performance number before running external call
     val memoryBefore = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE
     val timeBefore = System.nanoTime()
@@ -47,6 +51,7 @@ fun runProcessStd(
         .redirectOutput(outputFile)
     val process = processBuilder.start()
     val exitCode = process.waitFor()
+    exit = true
     return try {
         exitCode
     } catch (e: IOException) {

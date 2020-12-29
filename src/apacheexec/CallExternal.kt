@@ -5,10 +5,11 @@ import org.apache.commons.exec.DefaultExecutor
 import org.apache.commons.exec.ExecuteException
 import java.io.IOException
 import java.lang.Runtime
+import kotlin.concurrent.thread
 
 
 const val MEGABYTE = 1024L * 1024L
-
+var exit = false
 fun main(args: Array<String>) {
     print("Command: ")
 
@@ -21,16 +22,20 @@ fun main(args: Array<String>) {
     val memoryBefore = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE
     val timeBefore = System.nanoTime()
     val threadsBefore = Thread.getAllStackTraces().keys.size
-
+    thread {
+        while(!exit) {
+            println(Thread.getAllStackTraces().keys)
+        }
+    }
     // run external call
+    println(Thread.getAllStackTraces().keys)
     val exitCode = cmd?.let { runWithoutSTD(it) }
-
     // get performance number after running external call
     val threadsAfter = Thread.getAllStackTraces().keys.size - threadsBefore
+
     val timeAfter = System.nanoTime()
     val memoryAfter = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE
 
-    println("Number of threads used by apache exec is $threadsAfter")
     println("Execution time is ${(timeAfter-timeBefore)/1000000} ms")
     println("exit code is $exitCode")
     println("Memory cost by runWithoutSTD is ${memoryAfter-memoryBefore} MB")
@@ -43,6 +48,7 @@ fun runWithoutSTD(
     val executor = DefaultExecutor() // default executor object
     return try {
         val code = executor.execute(commandline)
+        exit = true
         code
     } catch (e: ExecuteException) {
         e.exitValue

@@ -1,8 +1,0 @@
-Capturing in javac mode...
-Found 1 source file to analyze in /Users/aaronzang/Desktop/JavaProcess/infer-out
-/Users/aaronzang/Desktop/HelloWorld.java starting
-/Users/aaronzang/Desktop/HelloWorld.java DONE
-
-Analysis finished in 1.956ss
-
-  No issues found  
